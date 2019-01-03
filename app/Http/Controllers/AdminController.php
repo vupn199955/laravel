@@ -1,21 +1,19 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\User;
+use App\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Config;
-
-class UserController extends Controller
+class AdminController extends Controller
 {
     public function authenticate(Request $request)
     {
-        Config::set('jwt.user', 'App\User'); 
-		Config::set('auth.providers.users.model', \App\User::class);
+        Config::set('jwt.user', 'App\Admin'); 
+		Config::set('auth.providers.users.model', \App\Admin::class);
         $credentials = $request->only('email', 'password');
 
         try {
@@ -34,7 +32,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:admins',
             'password' => 'required|string|min:6',
         ]);
 
@@ -42,7 +40,7 @@ class UserController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $user = User::create([
+        $user = Admin::create([
             'firstname' => $request->get('firstname'),
             'lastname' => $request->get('lastname'),
             'email' => $request->get('email'),
